@@ -1,0 +1,35 @@
+.productlist {
+    width: 60%;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+  }
+   
+  .productlist h2 {
+    text-align: center;
+    margin-bottom: 1rem;
+  }
+   
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+   
+  th,
+  td {
+    border: 1px solid #ddd;
+    padding: 0.75rem;
+    text-align: left;
+  }
+   
+  th {
+    background-color: #4caf50;
+    color: white;
+  }
+   
+  tbody tr:nth-child(even) {
+    background-color: #f2f2f2;
+  }
