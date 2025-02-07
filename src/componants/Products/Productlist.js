@@ -115,9 +115,34 @@ const ProductList = (props) => {
         props.deleteProduct(product)
     }
 
+    const filterProduct = props.products.filter(product => (
+        product.name.toLowerCase().includes(search.toLowerCase())
+    ))
+
+    const [search, setSearch] = useState()
+    const [currentPage, SetCurrentPage] = useState()
+    const itemsPerPage = 5
+
+    //Pagination
+    const indexOfLastProduct = currentPage*itemsPerPage
+    const indexOfFirstProduct = indexOfLastProduct-itemsPerPage
+
+    const currentProducts = filterProduct.slice(
+        indexOfFirstProduct, indexOfLastProduct
+    )
+
+    const totalPages = Math.ceil(props.products.length / itemsPerPage)
+
     return (
         <div className={classes.productlist}>
             <h2>Product List</h2>
+            <div className={`${formClasses.container} mb-2`}>
+                <form>
+                    <div className={formClasses.formgroupinput}>
+                        <input type="text" placeholder='search text' value={search} onChange={event => setSearch(event.target.value)} />
+                    </div>
+                </form>
+            </div>
             <table>
                 <thead>
                     <tr>
@@ -131,7 +156,7 @@ const ProductList = (props) => {
                 </thead>
                 <tbody>
                         {
-                        props.products.map((prod, count=1) => (
+                        currentProducts.map((prod, count=1) => (
                             <tr key={prod.id}>
                                 <td>{count++}</td>
                                 <td>{prod.name}</td>
@@ -159,8 +184,11 @@ const ProductList = (props) => {
                     }
                 </tbody>
             </table>
-            <div className={`${formClasses.container}my-3`}>
-                <h2>Product Form</h2>
+            <div>
+
+            </div>
+            {/* <div className={`${formClasses.container}`}>
+                <h2>Product Update Form</h2>
                 <form onSubmit={handleSubmitForm} >
                     <div className={formClasses.formgroupinput}>
                         <label htmlFor="name">Name</label>
@@ -180,7 +208,7 @@ const ProductList = (props) => {
                     </div>
                     <button type="submit">Save</button>
                 </form>
-            </div>
+            </div> */}
         </div>
     );
 }

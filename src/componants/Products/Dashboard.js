@@ -7,11 +7,10 @@ const Dashboard = () => {
     const [products, setProducts] = useState([])
 
     useEffect(() => {
-        const product = JSON.parse(window.sessionStorage.getItem('products'))
-        if (product) {
-            setProducts(product)
-        }
-    }, [])
+        const product = JSON.parse(window.localStorage.getItem('products'))
+        console.log(product)
+        setProducts(products)
+    })
 
     useEffect(() => {
         window.sessionStorage.setItem('products', JSON.stringify(products))
@@ -40,7 +39,7 @@ const Dashboard = () => {
 
     return (
         <div className={classes.dashboard}>
-            <ProductForm addProduct={addProduct} />
+            <ProductForm addProduct={addProduct} products={products} />
             <ProductList 
             updateProduct={updateProduct} 
             products={products} 
