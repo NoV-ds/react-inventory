@@ -1,11 +1,13 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import classes from './productform.module.css'
+import ProductProvider from '../../Context/ProductProvider'
 
-const ProductForm = (props) => {
+const ProductForm = () => {
     // const handleSubmit = (event) => {
     //     event.preventDefault()
     //     console.log(product)
     // }
+    const product_data = useContext(ProductProvider)
     const handleSubmit = event => {
       event.preventDefault()
       const newProduct = {
@@ -13,11 +15,11 @@ const ProductForm = (props) => {
         id: Number
       }
 
-      props.addProduct(newProduct)
+      product_data.addProduct(newProduct)
       // console.log(newProduct)
-      let last_id = props.products[props.products.length-1]
+      let last_id = product_data.products[product_data.products.length-1]
       setProduct({
-        id: props.products.length > 0?last_id.id+1:0,
+        id: product_data.products.length > 0?last_id.id+1:0,
         name: "",
         price: "",
         description: "",

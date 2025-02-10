@@ -1,8 +1,9 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import classes from './product.module.css'
 import formClasses from './productform.module.css'
+import ProductProvider from '../../Context/ProductProvider'
 
-const ProductList = (props) => {
+const ProductList = () => {
     // let products = [
     //     {
     //         id:1,
@@ -40,6 +41,8 @@ const ProductList = (props) => {
     //         expirayDate: new Date(2025,2,15)
     //     }
     // ]
+
+    const state = useContext(ProductProvider)
 
     //define edit product state
     const [editProduct, setEditProduct] = useState({
@@ -98,7 +101,7 @@ const ProductList = (props) => {
         const product = {
             ...editProduct
           }
-        props.updateProduct(product)
+        state.updateProduct(product)
         console.log(product)
         
         setEditProduct({
@@ -112,10 +115,10 @@ const ProductList = (props) => {
     }
 
     const handleDelete = product => {
-        props.deleteProduct(product)
+        state.deleteProduct(product)
     }
 
-    const filterProduct = props.products.filter(product => (
+    const filterProduct = state.products.filter(product => (
         product.name.toLowerCase().includes(search.toLowerCase())
     ))
 
@@ -131,7 +134,7 @@ const ProductList = (props) => {
         indexOfFirstProduct, indexOfLastProduct
     )
 
-    const totalPages = Math.ceil(props.products.length / itemsPerPage)
+    // const totalPages = Math.ceil(state.products.length / itemsPerPage)
 
     return (
         <div className={classes.productlist}>
@@ -187,7 +190,7 @@ const ProductList = (props) => {
             <div>
 
             </div>
-            {/* <div className={`${formClasses.container}`}>
+            <div className={`${formClasses.container}`}>
                 <h2>Product Update Form</h2>
                 <form onSubmit={handleSubmitForm} >
                     <div className={formClasses.formgroupinput}>
@@ -208,7 +211,7 @@ const ProductList = (props) => {
                     </div>
                     <button type="submit">Save</button>
                 </form>
-            </div> */}
+            </div>
         </div>
     );
 }
