@@ -8,13 +8,12 @@ const Dashboard = () => {
 
     useEffect(() => {
         const product = JSON.parse(window.localStorage.getItem('products'))
-        console.log(product)
-        setProducts(products)
-    })
+        window.localStorage.setItem('products', JSON.stringify(product))
+        setProducts(() => product)
+    }, [])
 
-    useEffect(() => {
-        window.sessionStorage.setItem('products', JSON.stringify(products))
-    }, [products])
+    // useEffect(() => {
+    // }, [products])
 
     const updateProduct = updatedProduct => {
         setProducts(

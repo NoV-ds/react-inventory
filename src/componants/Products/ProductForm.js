@@ -15,7 +15,8 @@ const ProductForm = (props) => {
 
       props.addProduct(newProduct)
       // console.log(newProduct)
-      let last_id = props.products[props.products.length-1]
+      let last_id = props.products[props.products.length]
+      console.log(last_id)
       setProduct({
         id: props.products.length > 0?last_id.id+1:0,
         name: "",

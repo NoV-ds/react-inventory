@@ -3,43 +3,45 @@ import classes from './product.module.css'
 import formClasses from './productform.module.css'
 
 const ProductList = (props) => {
-    // let products = [
-    //     {
-    //         id:1,
-    //         name:"Shirts",
-    //         description: "Black colored shirt",
-    //         price:2000,
-    //         expirayDate: new Date(2025,2,15)
-    //     },
-    //     {
-    //         id:2,
-    //         name:"pencil box",
-    //         description: "Solid steel pencil box",
-    //         price:2000,
-    //         expirayDate: new Date(2025,2,15)
-    //     },
-    //     {
-    //         id:3,
-    //         name:"Pant",
-    //         description: "Black colored",
-    //         price:2000,
-    //         expirayDate: new Date(2025,2,15)
-    //     },
-    //     {
-    //         id:4,
-    //         name:"Shirts",
-    //         description: "Black colored",
-    //         price:2000,
-    //         expirayDate: new Date(2025,2,15)
-    //     },
-    //     {
-    //         id:5,
-    //         name:"Head Phones",
-    //         description: "Good quality",
-    //         price:10000,
-    //         expirayDate: new Date(2025,2,15)
-    //     }
-    // ]
+    let products = [
+        {
+            id:1,
+            name:"Shirts",
+            description: "Black colored shirt",
+            price:2000,
+            expirayDate: new Date(2025,2,15)
+        },
+        {
+            id:2,
+            name:"pencil box",
+            description: "Solid steel pencil box",
+            price:2000,
+            expirayDate: new Date(2025,2,15)
+        },
+        {
+            id:3,
+            name:"Pant",
+            description: "Black colored",
+            price:2000,
+            expirayDate: new Date(2025,2,15)
+        },
+        {
+            id:4,
+            name:"Shirts",
+            description: "Black colored",
+            price:2000,
+            expirayDate: new Date(2025,2,15)
+        },
+        {
+            id:5,
+            name:"Head Phones",
+            description: "Good quality",
+            price:10000,
+            expirayDate: new Date(2025,2,15)
+        }
+    ]
+
+    
 
     //define edit product state
     const [editProduct, setEditProduct] = useState({
@@ -115,34 +117,40 @@ const ProductList = (props) => {
         props.deleteProduct(product)
     }
 
-    const filterProduct = props.products.filter(product => (
-        product.name.toLowerCase().includes(search.toLowerCase())
-    ))
+    const handleSearch = event => {
+        setSearch(event => event.target.value)
+    }
 
     const [search, setSearch] = useState()
-    const [currentPage, SetCurrentPage] = useState()
+
+    // const filterProduct = props.products.length>0?props.products.filter(product => (
+    //     product.name.toLowerCase().includes(search.toLowerCase())
+    // )):[]
+
+    const [currentPage, setCurrentPage] = useState()
     const itemsPerPage = 5
 
     //Pagination
     const indexOfLastProduct = currentPage*itemsPerPage
     const indexOfFirstProduct = indexOfLastProduct-itemsPerPage
 
-    const currentProducts = filterProduct.slice(
+    const currentProducts = props.products.length > 5?props.products.slice(
         indexOfFirstProduct, indexOfLastProduct
-    )
+    ):props.products
 
+    //total count
     const totalPages = Math.ceil(props.products.length / itemsPerPage)
 
     return (
         <div className={classes.productlist}>
             <h2>Product List</h2>
-            <div className={`${formClasses.container} mb-2`}>
+            {/* <div className={`${formClasses.container} mb-2`}>
                 <form>
                     <div className={formClasses.formgroupinput}>
-                        <input type="text" placeholder='search text' value={search} onChange={event => setSearch(event.target.value)} />
+                        <input type="text" placeholder='search text' value={search} onChange={handleSearch} />
                     </div>
                 </form>
-            </div>
+            </div> */}
             <table>
                 <thead>
                     <tr>
@@ -187,7 +195,7 @@ const ProductList = (props) => {
             <div>
 
             </div>
-            {/* <div className={`${formClasses.container}`}>
+            <div className={`${formClasses.container}`}>
                 <h2>Product Update Form</h2>
                 <form onSubmit={handleSubmitForm} >
                     <div className={formClasses.formgroupinput}>
@@ -208,7 +216,7 @@ const ProductList = (props) => {
                     </div>
                     <button type="submit">Save</button>
                 </form>
-            </div> */}
+            </div>
         </div>
     );
 }
