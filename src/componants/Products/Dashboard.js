@@ -4,16 +4,15 @@ import ProductForm from './ProductForm';
 import ProductList from './Productlist';
 
 const Dashboard = () => {
-    const [products, setProducts] = useState([])
+
+    const product = JSON.parse(localStorage.getItem('products'), [])
+
+    const [products, setProducts] = useState(!product?[]:product)
 
     useEffect(() => {
-        const product = JSON.parse(window.localStorage.getItem('products'))
-        window.localStorage.setItem('products', JSON.stringify(product))
-        setProducts(() => product)
-    }, [])
-
-    // useEffect(() => {
-    // }, [products])
+        localStorage.setItem('products', JSON.stringify(products))
+        // eslint-disable-next-line
+    }, [products])
 
     const updateProduct = updatedProduct => {
         setProducts(
@@ -31,9 +30,8 @@ const Dashboard = () => {
     const deleteProduct = delProduct => {
         console.log(delProduct)
         products.map(
-            product => (product.id === delProduct.id?window.sessionStorage.removeItem('product', JSON.stringify(product)):product)
-        )
-
+            product => (product.id === delProduct.id?localStorage.removeItem('products', JSON.stringify(delProduct.id)):delProduct)
+            )
     }
 
     return (

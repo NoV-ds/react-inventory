@@ -2,23 +2,21 @@ import React, { useState } from 'react'
 import classes from './productform.module.css'
 
 const ProductForm = (props) => {
-    // const handleSubmit = (event) => {
-    //     event.preventDefault()
-    //     console.log(product)
-    // }
-    const handleSubmit = event => {
+
+  const handleSubmit = event => {
       event.preventDefault()
+      let last_id = props.products[props.products.length-1]
+      console.log(last_id)
       const newProduct = {
         ...product,
-        id: Number
+        id: typeof(last_id) !== "undefined"?last_id.id+1:1
       }
 
       props.addProduct(newProduct)
       // console.log(newProduct)
-      let last_id = props.products[props.products.length]
-      console.log(last_id)
+
       setProduct({
-        id: props.products.length > 0?last_id.id+1:0,
+        id: "",
         name: "",
         price: "",
         description: "",
@@ -44,19 +42,19 @@ const ProductForm = (props) => {
       <form onSubmit={handleSubmit}>
         <div className={classes.formgroupinput}>
             <label htmlFor="name">Name</label>
-            <input type="text" name='name' required onChange={handleChange} />
+            <input type="text" name='name' required value={product.name} onChange={handleChange} />
         </div>
         <div className={classes.formgroupinput}>
             <label htmlFor="price">price</label>
-            <input type="text" name='price' required onChange={handleChange} />
+            <input type="number" name='price' required value={product.price} onChange={handleChange} />
         </div>
         <div className={classes.formgroupinput}>
             <label htmlFor="description">Description</label>
-            <input type="text" name='description' required onChange={handleChange} />
+            <input type="text" name='description' required value={product.description} onChange={handleChange} />
         </div>
         <div className={classes.formgroupinput}>
             <label htmlFor="expirydate">Expiry Date</label>
-            <input type="date" name='expirydate' required onChange={handleChange} />
+            <input type="date" name='expirydate' required value={product.expirydate} onChange={handleChange} />
         </div>
         <button type="submit">Add Product</button>
       </form>

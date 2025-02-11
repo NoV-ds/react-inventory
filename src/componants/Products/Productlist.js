@@ -1,47 +1,9 @@
 import React, { useState } from 'react'
 import classes from './product.module.css'
 import formClasses from './productform.module.css'
+import { Link } from 'react-router'
 
 const ProductList = (props) => {
-    let products = [
-        {
-            id:1,
-            name:"Shirts",
-            description: "Black colored shirt",
-            price:2000,
-            expirayDate: new Date(2025,2,15)
-        },
-        {
-            id:2,
-            name:"pencil box",
-            description: "Solid steel pencil box",
-            price:2000,
-            expirayDate: new Date(2025,2,15)
-        },
-        {
-            id:3,
-            name:"Pant",
-            description: "Black colored",
-            price:2000,
-            expirayDate: new Date(2025,2,15)
-        },
-        {
-            id:4,
-            name:"Shirts",
-            description: "Black colored",
-            price:2000,
-            expirayDate: new Date(2025,2,15)
-        },
-        {
-            id:5,
-            name:"Head Phones",
-            description: "Good quality",
-            price:10000,
-            expirayDate: new Date(2025,2,15)
-        }
-    ]
-
-    
 
     //define edit product state
     const [editProduct, setEditProduct] = useState({
@@ -65,7 +27,7 @@ const ProductList = (props) => {
 
     //define expand description with boolean state
     const handleDescription = (count) => {
-        if (isReadMore){
+        if (isReadMore) {
             setIsReadMore((prev) => ({
                 value: false,
                 index: count
@@ -83,14 +45,14 @@ const ProductList = (props) => {
     //format date to get proper local string output
     function formatDate(date) {
         const newDate = new Date(date)
-        return newDate.toLocaleDateString('en-us', {day: "numeric", month: "long", year: "numeric"})
+        return newDate.toLocaleDateString('en-us', { day: "numeric", month: "long", year: "numeric" })
     }
 
     //handling updates on changes and sending to state
     const handleEditChange = (event) => {
         console.log(event.target.value)
-        const {name, value} = event.target
-        setEditProduct({...editProduct, [name]: value})
+        const { name, value } = event.target
+        setEditProduct({ ...editProduct, [name]: value })
     }
 
     //Handling submission of update form and sending data using props to parent componant
@@ -99,58 +61,74 @@ const ProductList = (props) => {
         console.log(editProduct)
         const product = {
             ...editProduct
-          }
+        }
         props.updateProduct(product)
         console.log(product)
-        
+
         setEditProduct({
-          id: "",
-          name: "",
-          price: "",
-          description: "",
-          expirydate: ""
+            id: "",
+            name: "",
+            price: "",
+            description: "",
+            expirydate: Date
         })
-  
+
     }
 
+    // handle for deleting the data from a list
     const handleDelete = product => {
         props.deleteProduct(product)
     }
 
-    const handleSearch = event => {
-        setSearch(event => event.target.value)
-    }
 
     const [search, setSearch] = useState()
 
-    // const filterProduct = props.products.length>0?props.products.filter(product => (
-    //     product.name.toLowerCase().includes(search.toLowerCase())
-    // )):[]
+    //handling the searching value
+    const handleSearch = event => {
+        setSearch(() => event.target.value)
+    }
 
-    const [currentPage, setCurrentPage] = useState()
+
+    //filtering the product list according to search variable and if no search variable then sending the all product list
+    const filterProduct = props.products.length > 0 ? props.products.filter(product => (
+        product.name.toLowerCase().includes(typeof (search) === "undefined" ? "" : search.toLowerCase())
+    )) : []
+
+    const [currentPage, setCurrentPage] = useState(1)
     const itemsPerPage = 5
 
     //Pagination
-    const indexOfLastProduct = currentPage*itemsPerPage
-    const indexOfFirstProduct = indexOfLastProduct-itemsPerPage
+    const indexOfLastProduct = currentPage * itemsPerPage
+    const indexOfFirstProduct = indexOfLastProduct - itemsPerPage
 
-    const currentProducts = props.products.length > 5?props.products.slice(
+    // setting the current page products
+    const currentProducts = filterProduct.length > 5 ? filterProduct.slice(
         indexOfFirstProduct, indexOfLastProduct
-    ):props.products
+    ) : filterProduct
 
     //total count
     const totalPages = Math.ceil(props.products.length / itemsPerPage)
 
+    //handle previous page product list
+    const handlePagePrevious = () => {
+        setCurrentPage((page) => page > 1 ? page - 1 : page)
+    }
+
+    //handle next page product list
+    const handlePageNext = () => {
+        setCurrentPage((page) => page < totalPages ? page + 1 : page)
+    }
+
     return (
         <div className={classes.productlist}>
             <h2>Product List</h2>
-            {/* <div className={`${formClasses.container} mb-2`}>
+            <div className={`${formClasses.container} mb-2`}>
                 <form>
                     <div className={formClasses.formgroupinput}>
                         <input type="text" placeholder='search text' value={search} onChange={handleSearch} />
                     </div>
                 </form>
-            </div> */}
+            </div>
             <table>
                 <thead>
                     <tr>
@@ -163,40 +141,56 @@ const ProductList = (props) => {
                     </tr>
                 </thead>
                 <tbody>
-                        {
-                        currentProducts.map((prod, count=1) => (
+                    {
+                        currentProducts.map((prod, count = 1) => (
                             <tr key={prod.id}>
                                 <td>{count++}</td>
                                 <td>{prod.name}</td>
                                 <td>{prod.price}</td>
                                 <td >{
                                     prod.description.length < 5
-                                    ? prod.description
-                                    : isReadMore.value === false && isReadMore.index === prod.id
-                                    ? prod.description.substring(0, 5)
-                                    : prod.description
-                            }
-                            <a href='#' onClick={() => handleDescription(prod.id)}>{
-                                isReadMore.value === false && isReadMore.index === prod.id
-                                ?"...view more"
-                                :"...view less"
-                            }
-                            </a></td>
-                            <td>{formatDate(prod.expirydate)}</td>
-                            <td>
-                                <button type="button" style={{margin: "5px"}} onClick={() => handleEdit(prod)}>Edit</button>
-                                <button type="button" onClick={() => handleDelete(prod)}>Delete</button>
-                            </td>
-                           </tr> 
+                                        ? prod.description
+                                        : isReadMore.value === false && isReadMore.index === prod.id
+                                            ? prod.description.substring(0, 5)
+                                            : prod.description
+                                }
+                                    <Link to='#' onClick={() => handleDescription(prod.id)}>{
+                                        isReadMore.value === false && isReadMore.index === prod.id
+                                            ? "...view more"
+                                            : "...view less"
+                                    }
+                                    </Link></td>
+                                <td>{formatDate(prod.expirydate)}</td>
+                                <td>
+                                    <button type="button" style={{ margin: "5px" }} onClick={() => handleEdit(prod)}>Edit</button>
+                                    <button type="button" onClick={() => handleDelete(prod)}>Delete</button>
+                                </td>
+                            </tr>
                         ))
                     }
                 </tbody>
             </table>
             <div>
-
+                <nav aria-label="Page navigation center">
+                    <ul className="pagination">
+                        <li className="page-item">
+                            <Link className="page-link" to="#" onClick={handlePagePrevious} aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                            </Link>
+                        </li>
+                        <li className="page-item"><Link className="page-link" to="#">{currentPage}</Link></li>
+                        <li className="page-item">
+                            <Link className="page-link" to="#" onClick={handlePageNext} aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                            </Link>
+                        </li>
+                    </ul>
+                </nav>
             </div>
-            <div className={`${formClasses.container}`}>
+
+            <div className='container'>
                 <h2>Product Update Form</h2>
+
                 <form onSubmit={handleSubmitForm} >
                     <div className={formClasses.formgroupinput}>
                         <label htmlFor="name">Name</label>
@@ -204,7 +198,7 @@ const ProductList = (props) => {
                     </div>
                     <div className={formClasses.formgroupinput}>
                         <label htmlFor="price">Price</label>
-                        <input type="text" name='price' value={editProduct.price} onChange={handleEditChange} />
+                        <input type="number" name='price' value={editProduct.price} onChange={handleEditChange} />
                     </div>
                     <div className={formClasses.formgroupinput}>
                         <label htmlFor="description">Description</label>
